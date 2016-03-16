@@ -1,4 +1,5 @@
 import Player from './lib/player';
+import Bat from './lib/bat';
 var game;
 
 game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
@@ -24,6 +25,9 @@ function create() {
 
   // Player
   player = new Player(game);
+
+  // Bat
+  var bat = new Bat(game, {x: 500, y: 300});
 }
 
 function update() {
