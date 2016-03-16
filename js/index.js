@@ -7,6 +7,13 @@ game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: cr
 var platforms;
 var player;
 var bat;
+var bats;
+
+const BAT_COORDS = [
+  { x: 500, y: 300 },
+  { x: 200, y: 200 },
+  { x: 350, y: 100 }
+]
 
 function preload() {
   game.load.image('background', 'assets/bg.png');
@@ -28,14 +35,17 @@ function create() {
   player = new Player(game);
 
   // Bat
-  bat = new Bat(game, {x: 500, y: 300});
+  bats = game.add.group();
+  for (let coords of BAT_COORDS) {
+    new Bat(game, bats, coords);
+  }
 }
 
 function update() {
   game.physics.arcade.collide(player.entity, platforms);
   player.handleKeyboard();
 
-  game.physics.arcade.overlap(player._laser.entity, bat.entity, () => {
+  game.physics.arcade.overlap(player._laser.entity, bats, (player, bat) => {
     bat.kill();
   }, null);
 }

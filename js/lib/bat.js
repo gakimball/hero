@@ -7,11 +7,11 @@ export default class Bat {
     }
   }
 
-  constructor(game, position) {
+  constructor(game, group, position) {
     this._game = game;
-    this.entity = this._game.add.sprite(position.x, position.y, 'platform');
+    this.entity = group.create(position.x, position.y, 'platform');
     this._game.physics.arcade.enable(this.entity);
-    this.entity.body.setSize(10, 10);
+    this.entity.scale.setTo(0.25, 0.25);
     this.entity.body.collideWorldBounds = true;
 
     this.move();
