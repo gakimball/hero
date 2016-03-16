@@ -10,6 +10,7 @@ var bat;
 var bats;
 var inventory;
 var inventoryText;
+var powerText;
 
 const BAT_COORDS = [
   { x: 500, y: 300 },
@@ -51,6 +52,10 @@ function create() {
     fontSize: '32px',
     fill: '#fff'
   });
+  powerText = game.add.text(16, 60, `Power: ${player.power}`, {
+    fontSize: '32px',
+    fill: '#eee'
+  });
 }
 
 function update() {
@@ -63,4 +68,5 @@ function update() {
   }, null);
 
   inventoryText.text = `Bombs: ${inventory.bombs}`;
+  powerText.text = `Power: ${player.power}`;
 }

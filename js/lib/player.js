@@ -5,6 +5,7 @@ const GRAVITY = 300;
 const MOVE_SPEED = 150;
 const MAX_LIFT = 150;
 const LIFT_ACCELERATION = 750;
+const POWER_DECAY = 1000;
 
 export default class Player {
   constructor(game, inventory) {
@@ -20,6 +21,9 @@ export default class Player {
     this._bomb = new Bomb(game);
 
     this.facing = 'right';
+    this.power = 100;
+    this.moved = false;
+    this.decayInterval = null;
   }
 
   handleKeyboard() {
@@ -65,11 +69,21 @@ export default class Player {
   moveLeft() {
     this.entity.body.velocity.x = -MOVE_SPEED;
     this.facing = 'left';
+
+    if (!this.moved) {
+      this.moved = true;
+      this.startPowerDecay();
+    }
   }
 
   moveRight() {
     this.entity.body.velocity.x = MOVE_SPEED;
     this.facing = 'right';
+
+    if (!this.moved) {
+      this.moved = true;
+      this.startPowerDecay();
+    }
   }
 
   startJetpack() {
@@ -95,5 +109,12 @@ export default class Player {
 
     this._bomb.place(x, y);
     this.inventory.bombs = this.inventory.bombs - 1;
+  }
+
+  startPowerDecay() {
+    this.decayInterval = setInterval(() => {
+      this.power -= 1;
+      if (this.power === 0) clearInterval(this.decayInterval);
+    }, POWER_DECAY);
   }
 }
