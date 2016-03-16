@@ -1,13 +1,15 @@
 import Player from './lib/player';
 import Bat from './lib/bat';
-var game;
+import Inventory from './lib/inventory';
 
-game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
 var platforms;
 var player;
 var bat;
 var bats;
+var inventory;
+var inventoryText;
 
 const BAT_COORDS = [
   { x: 500, y: 300 },
@@ -32,14 +34,23 @@ function create() {
   ground.scale.setTo(10, 1);
   ground.body.immovable = true;
 
+  // Inventory
+  inventory = new Inventory();
+
   // Player
-  player = new Player(game);
+  player = new Player(game, inventory);
 
   // Bat
   bats = game.add.group();
   for (let coords of BAT_COORDS) {
     new Bat(game, bats, coords);
   }
+
+  // UI
+  inventoryText = game.add.text(16, 16, `Bombs: ${inventory.bombs}`, {
+    fontSize: '32px',
+    fill: '#fff'
+  });
 }
 
 function update() {
@@ -50,4 +61,6 @@ function update() {
   game.physics.arcade.overlap(player._laser.entity, bats, (player, bat) => {
     bat.kill();
   }, null);
+
+  inventoryText.text = `Bombs: ${inventory.bombs}`;
 }

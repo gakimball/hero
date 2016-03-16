@@ -7,8 +7,9 @@ const MAX_LIFT = 150;
 const LIFT_ACCELERATION = 750;
 
 export default class Player {
-  constructor(game) {
+  constructor(game, inventory) {
     this._game = game;
+    this.inventory = inventory;
     this.entity = this._game.add.sprite(32, game.world.height / 2, 'guy');
     this._game.physics.arcade.enable(this.entity);
     this.entity.body.gravity.y = GRAVITY;
@@ -80,7 +81,7 @@ export default class Player {
   }
 
   placeBomb() {
-    if (this._bomb.entity.alive) return;
+    if (this.inventory.bombs === 0 || this._bomb.entity.alive) return;
 
     var x;
     var y = this.entity.y + this.entity.height - this._bomb.entity.height;
@@ -93,5 +94,6 @@ export default class Player {
     }
 
     this._bomb.place(x, y);
+    this.inventory.bombs = this.inventory.bombs - 1;
   }
 }
