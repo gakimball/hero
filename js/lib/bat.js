@@ -25,4 +25,8 @@ export default class Bat {
 
     tween.start();
   }
+
+  kill() {
+    this.entity.destroy();
+  }
 }

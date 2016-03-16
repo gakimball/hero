@@ -6,6 +6,7 @@ game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: cr
 
 var platforms;
 var player;
+var bat;
 
 function preload() {
   game.load.image('background', 'assets/bg.png');
@@ -27,10 +28,14 @@ function create() {
   player = new Player(game);
 
   // Bat
-  var bat = new Bat(game, {x: 500, y: 300});
+  bat = new Bat(game, {x: 500, y: 300});
 }
 
 function update() {
   game.physics.arcade.collide(player.entity, platforms);
   player.handleKeyboard();
+
+  game.physics.arcade.overlap(player._laser.entity, bat.entity, () => {
+    bat.kill();
+  }, null);
 }
