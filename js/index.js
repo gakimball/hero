@@ -19,6 +19,7 @@ function preload() {
   game.load.image('background', 'assets/bg.png');
   game.load.image('guy', 'assets/guy.png');
   game.load.image('platform', 'assets/platform.jpg');
+  game.load.image('particle', 'assets/particle.jpg');
 }
 
 function create() {
@@ -43,6 +44,7 @@ function create() {
 
 function update() {
   game.physics.arcade.collide(player.entity, platforms);
+  game.physics.arcade.collide(player._bomb.entity, platforms);
   player.handleKeyboard();
 
   game.physics.arcade.overlap(player._laser.entity, bats, (player, bat) => {

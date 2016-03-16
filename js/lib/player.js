@@ -1,4 +1,5 @@
 import Laser from './laser';
+import Bomb from './bomb';
 
 const GRAVITY = 300;
 const MOVE_SPEED = 150;
@@ -13,7 +14,9 @@ export default class Player {
     this.entity.body.gravity.y = GRAVITY;
     this.entity.body.collideWorldBounds = true;
     this.entity.body.maxVelocity.y = MAX_LIFT;
+
     this._laser = new Laser(game, this);
+    this._bomb = new Bomb(game);
 
     this.facing = 'right';
   }
@@ -38,6 +41,11 @@ export default class Player {
     }
     else {
       this.stopJetpack();
+    }
+
+    // Bomb
+    if (arrows.down.isDown && this.entity.body.touching.down) {
+      this.placeBomb();
     }
 
     // Laser
@@ -69,5 +77,21 @@ export default class Player {
 
   stopJetpack() {
     this.entity.body.acceleration.y = 0;
+  }
+
+  placeBomb() {
+    if (this._bomb.entity.alive) return;
+
+    var x;
+    var y = this.entity.y + this.entity.height - this._bomb.entity.height;
+
+    if (this.facing === 'right') {
+      x = this.entity.x + this.entity.width;
+    }
+    else {
+      x = this.entity.x - this._bomb.entity.width;
+    }
+
+    this._bomb.place(x, y);
   }
 }
