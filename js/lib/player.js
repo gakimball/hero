@@ -1,3 +1,5 @@
+import Laser from './laser';
+
 export default class Player {
   constructor(game) {
     this._game = game;
@@ -5,6 +7,9 @@ export default class Player {
     this._game.physics.arcade.enable(this.entity);
     this.entity.body.gravity.y = 300;
     this.entity.body.collideWorldBounds = true;
+    this._laser = new Laser(game, this);
+
+    this.facing = 'right';
   }
 
   handleKeyboard() {
@@ -33,13 +38,19 @@ export default class Player {
 
   moveLeft() {
     this.entity.body.velocity.x = -150;
+    this.facing = 'left';
   }
 
   moveRight() {
     this.entity.body.velocity.x = 150;
+    this.facing = 'right';
   }
 
   startJetpack() {
     this.entity.body.velocity.y = -150;
+  }
+
+  startLaser() {
+
   }
 }
