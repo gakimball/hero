@@ -1,12 +1,18 @@
 import Laser from './laser';
 
+const GRAVITY = 300;
+const MOVE_SPEED = 150;
+const MAX_LIFT = 150;
+const LIFT_ACCELERATION = 750;
+
 export default class Player {
   constructor(game) {
     this._game = game;
     this.entity = this._game.add.sprite(32, game.world.height / 2, 'guy');
     this._game.physics.arcade.enable(this.entity);
-    this.entity.body.gravity.y = 300;
+    this.entity.body.gravity.y = GRAVITY;
     this.entity.body.collideWorldBounds = true;
+    this.entity.body.maxVelocity.y = MAX_LIFT;
     this._laser = new Laser(game, this);
 
     this.facing = 'right';
@@ -15,7 +21,6 @@ export default class Player {
   handleKeyboard() {
     var arrows = this._game.input.keyboard.createCursorKeys();
     var spaceBar = this._game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    var shift = this._game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
 
     this.resetMovement();
 
@@ -28,12 +33,15 @@ export default class Player {
     }
 
     // Jetpack
-    if (spaceBar.isDown) {
+    if (arrows.up.isDown) {
       this.startJetpack();
+    }
+    else {
+      this.stopJetpack();
     }
 
     // Laser
-    if (shift.isDown) {
+    if (spaceBar.isDown) {
       this._laser.activate();
     }
     else {
@@ -46,16 +54,20 @@ export default class Player {
   }
 
   moveLeft() {
-    this.entity.body.velocity.x = -150;
+    this.entity.body.velocity.x = -MOVE_SPEED;
     this.facing = 'left';
   }
 
   moveRight() {
-    this.entity.body.velocity.x = 150;
+    this.entity.body.velocity.x = MOVE_SPEED;
     this.facing = 'right';
   }
 
   startJetpack() {
-    this.entity.body.velocity.y = -150;
+    this.entity.body.acceleration.y = -LIFT_ACCELERATION;
+  }
+
+  stopJetpack() {
+    this.entity.body.acceleration.y = 0;
   }
 }
