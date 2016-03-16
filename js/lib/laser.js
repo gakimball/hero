@@ -7,6 +7,15 @@ export default class Laser {
     this.entity.scale.setTo(0.5, 0.1);
 
     this.entity.update = Laser.update.bind(this);
+    this.deactivate();
+  }
+
+  activate() {
+    this.entity.revive();
+  }
+
+  deactivate() {
+    this.entity.kill();
   }
 
   static update() {

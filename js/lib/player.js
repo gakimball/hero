@@ -15,6 +15,7 @@ export default class Player {
   handleKeyboard() {
     var arrows = this._game.input.keyboard.createCursorKeys();
     var spaceBar = this._game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    var shift = this._game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
 
     this.resetMovement();
 
@@ -29,6 +30,14 @@ export default class Player {
     // Jetpack
     if (spaceBar.isDown) {
       this.startJetpack();
+    }
+
+    // Laser
+    if (shift.isDown) {
+      this._laser.activate();
+    }
+    else {
+      this._laser.deactivate();
     }
   }
 
@@ -48,9 +57,5 @@ export default class Player {
 
   startJetpack() {
     this.entity.body.velocity.y = -150;
-  }
-
-  startLaser() {
-
   }
 }
