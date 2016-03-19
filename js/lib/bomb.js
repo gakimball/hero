@@ -1,6 +1,10 @@
 const EXPLODE_TIMER = 3000;
 
 export default class Bomb {
+  /**
+   * Creates a Bomb instance. Since only one bomb can be placed at a time, the same instance is reused for all bombs placed.
+   * @param {object} game - Phaser game instance.
+   */
   constructor(game) {
     this._game = game;
     this.entity = this._game.add.sprite(0, 0, 'platform');
@@ -16,6 +20,11 @@ export default class Bomb {
     this.setupExplosions();
   }
 
+  /**
+   * Place the bomb at the given world coordinates.
+   * @param {number} x - x position.
+   * @param {number} y - y position.
+   */
   place(x, y) {
     this.entity.x = x;
     this.entity.y = y;
@@ -23,6 +32,9 @@ export default class Bomb {
     this.timeout = setTimeout(this.explode.bind(this), EXPLODE_TIMER);
   }
 
+  /**
+   * Trigger the bomb's explosion, activating Explosion objects which destroy walls and enemies, firing the explosion particles, and killing the bomb instance.
+   */
   explode() {
     let explosion = Bomb.explosion(this._game);
     this.entity.kill();
@@ -33,6 +45,11 @@ export default class Bomb {
     setTimeout(this.killExplosions.bind(this), 100);
   }
 
+  /**
+   * Generates a particle emitter instance.
+   * @param {object} game - Phaser game instance.
+   * @returns {object} Phaser Emitter.
+   */
   static explosion(game) {
     let emitter = game.add.emitter(0, 0, 50);
     emitter.makeParticles('particle');
@@ -40,6 +57,9 @@ export default class Bomb {
     return emitter;
   }
 
+  /**
+   * Create the invisible explosion objects that sit to the left and right of the bomb and destroy walls/enemies.
+   */
   setupExplosions() {
     let explosions = this._game.add.group();
 
@@ -55,6 +75,9 @@ export default class Bomb {
     this.explosions = explosions;
   }
 
+  /**
+   * Position the Explosion objects to the left and right of the Bomb. This is called when the Bomb is placed.
+   */
   positionExplosions() {
     const COORDS = [
       {
@@ -75,6 +98,9 @@ export default class Bomb {
     }
   }
 
+  /**
+   * Kill the Explosion instances.
+   */
   killExplosions() {
     for (let i = 0; i < this.explosions.length; i++) {
       let expl = this.explosions.getAt(i);

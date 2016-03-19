@@ -1,4 +1,7 @@
 export default class Bat {
+  /**
+   * Static object that defines tween settings for the bat's movement.
+   */
   static get tweenProps() {
     return {
       offset: 50,
@@ -7,6 +10,12 @@ export default class Bat {
     }
   }
 
+  /**
+   * Creates a new Bat.
+   * @param {object} game - Phaser game instance.
+   * @param {object} group - Phaser group to place the Bat in.
+   * @param {object} position - x and y position of the Bat.
+   */
   constructor(game, group, position) {
     this._game = game;
     this.entity = group.create(position.x, position.y, 'platform');
@@ -17,6 +26,9 @@ export default class Bat {
     this.move();
   }
 
+  /**
+   * Initializes position tweening.
+   */
   move() {
     const props = Bat.tweenProps;
 
@@ -26,6 +38,9 @@ export default class Bat {
     tween.start();
   }
 
+  /**
+   * Destroys the Bat object.
+   */
   kill() {
     this.entity.destroy();
   }

@@ -9,6 +9,11 @@ const POWER_DECAY = 1000;
 const SCALE = 0.35;
 
 export default class Player {
+  /**
+   * Creates a new Player instance. Also initializes entities for the laser, bomb, and jetpack particle emitter.
+   * @param {object} game - Phaser game instance.
+   * @param {object} inventory - Inventory instance.
+   */
   constructor(game, inventory) {
     this._game = game;
     this.inventory = inventory;
@@ -33,6 +38,14 @@ export default class Player {
     this.entity.update = Player.update.bind(this);
   }
 
+  /**
+   * Responds to keyboard input.
+   *   - Left Arrow: move player left.
+   *   - Right Arrow: move player right.
+   *   - Up Arrow: activate jetpack.
+   *   - Down Arrow: place bomb.
+   *   - Spacebar: activate laser.
+   */
   handleKeyboard() {
     var arrows = this._game.input.keyboard.createCursorKeys();
     var spaceBar = this._game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -69,10 +82,16 @@ export default class Player {
     }
   }
 
+  /**
+   * Stops the player's movement.
+   */
   resetMovement() {
     this.entity.body.velocity.x = 0;
   }
 
+  /**
+   * Moves the player to the left.
+   */
   moveLeft() {
     this.entity.body.velocity.x = -MOVE_SPEED;
     this.entity.scale.x = SCALE;
@@ -84,6 +103,9 @@ export default class Player {
     }
   }
 
+  /**
+   * Moves the player to the right.
+   */
   moveRight() {
     this.entity.body.velocity.x = MOVE_SPEED;
     this.entity.scale.x = -SCALE;
@@ -95,16 +117,25 @@ export default class Player {
     }
   }
 
+  /**
+   * Activates the jetpack, lifting the player up.
+   */
   startJetpack() {
     this.entity.body.acceleration.y = -LIFT_ACCELERATION;
     this._jetpackParticles.start();
   }
 
+  /**
+   * Deactivates the jetpack.
+   */
   stopJetpack() {
     this.entity.body.acceleration.y = 0;
     this._jetpackParticles.stop();
   }
 
+  /**
+   * Places a bomb, which detonates after a set interval.
+   */
   placeBomb() {
     if (this.inventory.bombs === 0 || this._bomb.entity.alive) return;
 
@@ -122,6 +153,9 @@ export default class Player {
     this.inventory.bombs = this.inventory.bombs - 1;
   }
 
+  /**
+   * Begins draining the player's Power gauge.
+   */
   startPowerDecay() {
     this.decayInterval = setInterval(() => {
       this.power -= 1;
@@ -129,12 +163,19 @@ export default class Player {
     }, POWER_DECAY);
   }
 
+  /**
+   * Override to the entity's `update()` method. Sets the position of the jetpack particle emitter to follow the player.
+   */
   static update() {
     this._jetpackParticles.updatePosition(this.entity.x, this.entity.y);
   }
 }
 
 class JetpackParticles {
+  /**
+   * Creates a particle emitter for the player's jetpack.
+   * @param {object} game - Phaser game instance.
+   */
   constructor(game) {
     this.emitter = game.add.emitter(0, 0);
     this.emitter.makeParticles('particle');
@@ -146,15 +187,26 @@ class JetpackParticles {
     this.emitter.on = false;
   }
 
+  /**
+   * Updates the position of the emitter.
+   * @param {number} x - x position.
+   * @param {number} y - y position.
+   */
   updatePosition(x, y) {
     this.emitter.x = x;
     this.emitter.y = y;
   }
 
+  /**
+   * Start the particle emitter.
+   */
   start() {
     this.emitter.on = true;
   }
 
+  /**
+   * Pause the particle emitter.
+   */
   stop() {
     this.emitter.on = false;
   }
