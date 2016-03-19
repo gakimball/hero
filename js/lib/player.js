@@ -19,14 +19,18 @@ export default class Player {
     this.entity.body.gravity.y = GRAVITY;
     this.entity.body.collideWorldBounds = true;
     this.entity.body.maxVelocity.y = MAX_LIFT;
+    this.entity.body.bounce.setTo(0.5, 0.5);
 
     this._laser = new Laser(game, this);
     this._bomb = new Bomb(game);
+    this._jetpackParticles = new JetpackParticles(game);
 
     this.facing = 'right';
     this.power = 100;
     this.moved = false;
     this.decayInterval = null;
+
+    this.entity.update = Player.update.bind(this);
   }
 
   handleKeyboard() {
@@ -93,10 +97,12 @@ export default class Player {
 
   startJetpack() {
     this.entity.body.acceleration.y = -LIFT_ACCELERATION;
+    this._jetpackParticles.start();
   }
 
   stopJetpack() {
     this.entity.body.acceleration.y = 0;
+    this._jetpackParticles.stop();
   }
 
   placeBomb() {
@@ -123,7 +129,33 @@ export default class Player {
     }, POWER_DECAY);
   }
 
-  static jetpackParticles(game) {
-    let emitter = game.add.emitter(0, 0);
+  static update() {
+    this._jetpackParticles.updatePosition(this.entity.x, this.entity.y);
+  }
+}
+
+class JetpackParticles {
+  constructor(game) {
+    this.emitter = game.add.emitter(0, 0);
+    this.emitter.makeParticles('particle');
+    this.emitter.maxParticleScale = 0.4;
+    this.emitter.minParticleScale = 0.4;
+    this.emitter.setXSpeed(0, 0);
+    this.emitter.setYSpeed(100, 100);
+    this.emitter.start(false, 500, 150, 0);
+    this.emitter.on = false;
+  }
+
+  updatePosition(x, y) {
+    this.emitter.x = x;
+    this.emitter.y = y;
+  }
+
+  start() {
+    this.emitter.on = true;
+  }
+
+  stop() {
+    this.emitter.on = false;
   }
 }
