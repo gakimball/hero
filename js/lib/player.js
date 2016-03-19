@@ -11,7 +11,7 @@ export default class Player {
   constructor(game, inventory) {
     this._game = game;
     this.inventory = inventory;
-    this.entity = this._game.add.sprite(32, game.world.height / 2, 'guy');
+    this.entity = this._game.add.sprite(300, game.world.height / 2, 'guy');
     this._game.physics.arcade.enable(this.entity);
     this.entity.body.gravity.y = GRAVITY;
     this.entity.body.collideWorldBounds = true;

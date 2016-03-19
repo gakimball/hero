@@ -8,6 +8,7 @@ var platforms;
 var player;
 var bat;
 var bats;
+var walls;
 var inventory;
 var inventoryText;
 var powerText;
@@ -47,6 +48,13 @@ function create() {
     new Bat(game, bats, coords);
   }
 
+  // Walls
+  walls = game.add.group();
+  walls.enableBody = true;
+  let wall = walls.create(100, 300, 'platform');
+  wall.scale.setTo(1, 4);
+  wall.body.immovable = true;
+
   // UI
   inventoryText = game.add.text(16, 16, `Bombs: ${inventory.bombs}`, {
     fontSize: '32px',
@@ -60,12 +68,17 @@ function create() {
 
 function update() {
   game.physics.arcade.collide(player.entity, platforms);
+  game.physics.arcade.collide(player.entity, walls);
   game.physics.arcade.collide(player._bomb.entity, platforms);
   player.handleKeyboard();
 
   game.physics.arcade.overlap(player._laser.entity, bats, (player, bat) => {
     bat.kill();
   }, null);
+
+  game.physics.arcade.overlap(player._bomb.explosions, walls, (expl, wall) => {
+    wall.destroy();
+  });
 
   inventoryText.text = `Bombs: ${inventory.bombs}`;
   powerText.text = `Power: ${player.power}`;
