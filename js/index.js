@@ -21,9 +21,9 @@ const BAT_COORDS = [
 
 function preload() {
   game.load.image('background', 'assets/bg.png');
-  game.load.image('guy', 'assets/guy.png');
+  game.load.image('guy', 'assets/cadet.png');
   game.load.image('platform', 'assets/platform.jpg');
-  game.load.image('particle', 'assets/particle.jpg');
+  game.load.image('particle', 'assets/particle.png');
 }
 
 function create() {

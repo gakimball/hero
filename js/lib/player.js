@@ -6,6 +6,7 @@ const MOVE_SPEED = 150;
 const MAX_LIFT = 150;
 const LIFT_ACCELERATION = 750;
 const POWER_DECAY = 1000;
+const SCALE = 0.35;
 
 export default class Player {
   constructor(game, inventory) {
@@ -13,6 +14,8 @@ export default class Player {
     this.inventory = inventory;
     this.entity = this._game.add.sprite(300, game.world.height / 2, 'guy');
     this._game.physics.arcade.enable(this.entity);
+    this.entity.scale.setTo(SCALE, SCALE);
+    this.entity.anchor.setTo(0.5, 1);
     this.entity.body.gravity.y = GRAVITY;
     this.entity.body.collideWorldBounds = true;
     this.entity.body.maxVelocity.y = MAX_LIFT;
@@ -68,6 +71,7 @@ export default class Player {
 
   moveLeft() {
     this.entity.body.velocity.x = -MOVE_SPEED;
+    this.entity.scale.x = SCALE;
     this.facing = 'left';
 
     if (!this.moved) {
@@ -78,6 +82,7 @@ export default class Player {
 
   moveRight() {
     this.entity.body.velocity.x = MOVE_SPEED;
+    this.entity.scale.x = -SCALE;
     this.facing = 'right';
 
     if (!this.moved) {
@@ -98,13 +103,13 @@ export default class Player {
     if (this.inventory.bombs === 0 || this._bomb.entity.alive) return;
 
     var x;
-    var y = this.entity.y + this.entity.height - this._bomb.entity.height;
+    var y = this.entity.y - this._bomb.entity.height;
 
     if (this.facing === 'right') {
-      x = this.entity.x + this.entity.width;
+      x = this.entity.x + Math.abs(this.entity.body.halfWidth);
     }
     else {
-      x = this.entity.x - this._bomb.entity.width;
+      x = this.entity.x - this.entity.body.halfWidth - this._bomb.entity.width;
     }
 
     this._bomb.place(x, y);
@@ -116,5 +121,9 @@ export default class Player {
       this.power -= 1;
       if (this.power === 0) clearInterval(this.decayInterval);
     }, POWER_DECAY);
+  }
+
+  static jetpackParticles(game) {
+    let emitter = game.add.emitter(0, 0);
   }
 }
