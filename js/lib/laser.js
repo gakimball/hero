@@ -19,13 +19,18 @@ export default class Laser {
   }
 
   static update() {
-    this.entity.y = this._player.entity.y + (this._player.entity.height / 2);
+    this.entity.y = this._player.entity.y - 8;
 
     if (this._player.facing === 'right') {
-      this.entity.x = this._player.entity.x + this._player.entity.width;
+      this.entity.x =
+        this._player.entity.x
+        + Math.abs(this._player.entity.body.halfWidth);
     }
     else {
-      this.entity.x = this._player.entity.x - this.entity.width;
+      this.entity.x =
+        this._player.entity.x
+        - Math.abs(this._player.entity.body.halfWidth)
+        - this.entity.width;
     }
   }
 }
