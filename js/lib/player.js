@@ -31,6 +31,8 @@ export default class Player {
     this._jetpackParticles = new JetpackParticles(game);
 
     this.facing = 'left';
+    this.life = 2;
+    this.invincible = false;
     this.power = 100;
     this.moved = false;
     this.decayInterval = null;
@@ -168,6 +170,27 @@ export default class Player {
    */
   static update() {
     this._jetpackParticles.updatePosition(this.entity.x, this.entity.y);
+  }
+
+  hurt() {
+    if (this.invincible) return;
+    this.life -= 1;
+
+    if (this.life === 0) {
+      this.entity.kill();
+    }
+    else {
+      this.invincible = true;
+      let tween = this._game.add.tween(this.entity);
+      tween.to({ alpha: 0 }, 250, Phaser.Easing.Default, true, 0, -1, true);
+      tween.start();
+
+      setTimeout(() => {
+        tween.stop();
+        this.entity.alpha = 1;
+        this.invincible = false;
+      }, 3000);
+    }
   }
 }
 

@@ -12,6 +12,7 @@ var walls;
 var inventory;
 var inventoryText;
 var powerText;
+var lifeText;
 
 const BAT_COORDS = [
   { x: 500, y: 300 },
@@ -65,6 +66,10 @@ function create() {
     fontSize: '32px',
     fill: '#eee'
   });
+  lifeText = game.add.text(16, 104, `Life: ${player.life}`, {
+    fontSize: '32px',
+    fill: '#eee'
+  });
 }
 
 function update() {
@@ -81,6 +86,12 @@ function update() {
     wall.destroy();
   });
 
+  game.physics.arcade.overlap(player.entity, bats, (pl, bat) => {
+    player.hurt();
+    bat.destroy();
+  })
+
   inventoryText.text = `Bombs: ${inventory.bombs}`;
   powerText.text = `Power: ${player.power}`;
+  lifeText.text = `Life: ${player.life}`;
 }
