@@ -6,13 +6,9 @@ import loadAssets from './lib/loadAssets';
 
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
-var platforms;
-var player;
-var bat;
-var bats;
-var walls;
-var inventory;
 var ui;
+var entities;
+var inventory;
 
 const BAT_COORDS = [
   { x: 500, y: 300 },
@@ -28,9 +24,10 @@ function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
   // Platforms
-  platforms = game.add.group();
+  let platforms = game.add.group();
   platforms.enableBody = true;
-  var ground = platforms.create(0, game.world.height - 64, 'platform');
+
+  let ground = platforms.create(0, game.world.height - 64, 'platform');
   ground.scale.setTo(10, 1);
   ground.body.immovable = true;
 
@@ -38,41 +35,49 @@ function create() {
   inventory = new Inventory();
 
   // Player
-  player = new Player(game, inventory);
+  let player = new Player(game, inventory);
 
   // Bat
-  bats = game.add.group();
+  let bats = game.add.group();
   for (let coords of BAT_COORDS) {
     new Bat(game, bats, coords);
   }
 
   // Walls
-  walls = game.add.group();
+  let walls = game.add.group();
   walls.enableBody = true;
+
   let wall = walls.create(100, 300, 'platform');
   wall.scale.setTo(1, 4);
   wall.body.immovable = true;
 
   // UI
   ui = new UI(game, player, inventory);
+
+  entities = {
+    player: player,
+    platforms: platforms,
+    walls: walls,
+    bats: bats
+  }
 }
 
 function update() {
-  game.physics.arcade.collide(player.entity, platforms);
-  game.physics.arcade.collide(player.entity, walls);
-  game.physics.arcade.collide(player._bomb.entity, platforms);
-  player.handleKeyboard();
+  game.physics.arcade.collide(entities.player.entity, entities.platforms);
+  game.physics.arcade.collide(entities.player.entity, entities.walls);
+  game.physics.arcade.collide(entities.player._bomb.entity, entities.platforms);
+  entities.player.handleKeyboard();
 
-  game.physics.arcade.overlap(player._laser.entity, bats, (player, bat) => {
+  game.physics.arcade.overlap(entities.player._laser.entity, entities.bats, (player, bat) => {
     bat.kill();
   }, null);
 
-  game.physics.arcade.overlap(player._bomb.explosions, walls, (expl, wall) => {
+  game.physics.arcade.overlap(entities.player._bomb.explosions, entities.walls, (expl, wall) => {
     wall.destroy();
   });
 
-  game.physics.arcade.overlap(player.entity, bats, (pl, bat) => {
-    player.hurt();
+  game.physics.arcade.overlap(entities.player.entity, entities.bats, (pl, bat) => {
+    entities.player.hurt();
     bat.destroy();
   })
 
