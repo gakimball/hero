@@ -1,5 +1,5 @@
-import Player from './lib/player';
-import Bat from './lib/bat';
+import Player from './entities/player';
+import Bat from './entities/bat';
 import Inventory from './lib/inventory';
 import UI from './lib/ui';
 import CollisionManager from './lib/collisionManager';
