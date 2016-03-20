@@ -2,6 +2,8 @@ import Player from './lib/player';
 import Bat from './lib/bat';
 import Inventory from './lib/inventory';
 import UI from './lib/ui';
+import CollisionManager from './lib/collisionManager';
+
 import loadAssets from './lib/loadAssets';
 
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
@@ -9,6 +11,7 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create
 var ui;
 var entities;
 var inventory;
+var collisions;
 
 const BAT_COORDS = [
   { x: 500, y: 300 },
@@ -60,26 +63,14 @@ function create() {
     walls: walls,
     bats: bats
   }
+
+  // Collision manager
+  collisions = new CollisionManager(game, entities);
 }
 
 function update() {
-  game.physics.arcade.collide(entities.player.entity, entities.platforms);
-  game.physics.arcade.collide(entities.player.entity, entities.walls);
-  game.physics.arcade.collide(entities.player._bomb.entity, entities.platforms);
   entities.player.handleKeyboard();
-
-  game.physics.arcade.overlap(entities.player._laser.entity, entities.bats, (player, bat) => {
-    bat.kill();
-  }, null);
-
-  game.physics.arcade.overlap(entities.player._bomb.explosions, entities.walls, (expl, wall) => {
-    wall.destroy();
-  });
-
-  game.physics.arcade.overlap(entities.player.entity, entities.bats, (pl, bat) => {
-    entities.player.hurt();
-    bat.destroy();
-  })
-
+  collisions.handleCollisions();
+  collisions.handleOverlaps();
   ui.update();
 }
