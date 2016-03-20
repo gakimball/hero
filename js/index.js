@@ -2,6 +2,7 @@ import Player from './lib/player';
 import Bat from './lib/bat';
 import Inventory from './lib/inventory';
 import UI from './lib/ui';
+import loadAssets from './lib/loadAssets';
 
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
@@ -20,11 +21,7 @@ const BAT_COORDS = [
 ]
 
 function preload() {
-  game.load.image('background', 'assets/bg.png');
-  game.load.image('guy', 'assets/cadet.png');
-  game.load.image('platform', 'assets/platform.jpg');
-  game.load.image('particle', 'assets/particle.png');
-  game.load.spritesheet('eye', 'assets/eye.png', 70, 70);
+  loadAssets(game);
 }
 
 function create() {
