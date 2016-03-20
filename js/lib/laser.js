@@ -33,7 +33,7 @@ export default class Laser {
    * Override to the Laser's `update()` method. It repositions the laser to the left or right of the player, depending on the player's facing direction.
    */
   static update() {
-    this.entity.y = this._player.entity.y - 8;
+    this.entity.y = this._player.entity.y - 11;
 
     if (this._player.facing === 'right') {
       this.entity.x =

@@ -30,7 +30,7 @@ export default class Player {
     this._bomb = new Bomb(game);
     this._jetpackParticles = new JetpackParticles(game);
 
-    this.facing = 'right';
+    this.facing = 'left';
     this.power = 100;
     this.moved = false;
     this.decayInterval = null;
