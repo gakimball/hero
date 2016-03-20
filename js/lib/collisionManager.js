@@ -1,4 +1,9 @@
 export default class CollisionManager {
+  /**
+   * Creates a collision manager, which runs Phaser methods for checking collisions and overlaps.
+   * @param {object} game - Phaser game instance.
+   * @param {object} entities - Object of entities to reference.
+   */
   constructor(game, entities) {
     this.game = game;
     this.entities = entities;
@@ -6,6 +11,9 @@ export default class CollisionManager {
     this.defineCollisions();
   }
 
+  /**
+   * Sets up pairs of entities that should collide.
+   */
   defineCollisions() {
     let entities = this.entities;
 
@@ -16,12 +24,18 @@ export default class CollisionManager {
     ];
   }
 
+  /**
+   * Calls Phaer's `game.physics.arcade.collide()` for each set of entities defined in `defineCollisions()`. Runs during Phaser's `update()` step.
+   */
   handleCollisions() {
     for (var pair of this.COLLISIONS) {
       this.game.physics.arcade.collide.apply(this.game.physics.arcade, pair);
     }
   }
 
+  /**
+   * Calls Phaser's `game.physics.arcade()` for entities that need it. Runs during Phaser's `update()` step.
+   */
   handleOverlaps() {
     let overlap = this.game.physics.arcade.overlap.bind(this.game.physics.arcade);
     let entities = this.entities;

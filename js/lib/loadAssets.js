@@ -1,3 +1,7 @@
+/**
+ * Loads assets into Phaser.
+ * @param {object} game - Phaser game instance.
+ */
 export default function loadAssets(game) {
   game.load.image('background', 'assets/bg.png');
   game.load.image('guy', 'assets/cadet.png');
