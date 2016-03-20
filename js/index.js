@@ -1,6 +1,7 @@
 import Player from './lib/player';
 import Bat from './lib/bat';
 import Inventory from './lib/inventory';
+import UI from './lib/ui';
 
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
@@ -10,9 +11,7 @@ var bat;
 var bats;
 var walls;
 var inventory;
-var inventoryText;
-var powerText;
-var lifeText;
+var ui;
 
 const BAT_COORDS = [
   { x: 500, y: 300 },
@@ -58,18 +57,7 @@ function create() {
   wall.body.immovable = true;
 
   // UI
-  inventoryText = game.add.text(16, 16, `Bombs: ${inventory.bombs}`, {
-    fontSize: '32px',
-    fill: '#fff'
-  });
-  powerText = game.add.text(16, 60, `Power: ${player.power}`, {
-    fontSize: '32px',
-    fill: '#eee'
-  });
-  lifeText = game.add.text(16, 104, `Life: ${player.life}`, {
-    fontSize: '32px',
-    fill: '#eee'
-  });
+  ui = new UI(game, player, inventory);
 }
 
 function update() {
@@ -91,7 +79,5 @@ function update() {
     bat.destroy();
   })
 
-  inventoryText.text = `Bombs: ${inventory.bombs}`;
-  powerText.text = `Power: ${player.power}`;
-  lifeText.text = `Life: ${player.life}`;
+  ui.update();
 }
