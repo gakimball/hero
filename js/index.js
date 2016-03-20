@@ -69,8 +69,8 @@ function create() {
 }
 
 function update() {
-  entities.player.handleKeyboard();
   collisions.handleCollisions();
+  entities.player.handleKeyboard();
   collisions.handleOverlaps();
   ui.update();
 }
