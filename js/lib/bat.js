@@ -4,7 +4,7 @@ export default class Bat {
    */
   static get tweenProps() {
     return {
-      offset: 50,
+      offset: 25,
       duration: 1000,
       easing: Phaser.Easing.Default
     }
@@ -18,10 +18,13 @@ export default class Bat {
    */
   constructor(game, group, position) {
     this._game = game;
-    this.entity = group.create(position.x, position.y, 'platform');
+    this.entity = group.create(position.x, position.y, 'eye');
     this._game.physics.arcade.enable(this.entity);
-    this.entity.scale.setTo(0.25, 0.25);
+    this.entity.scale.setTo(0.5, 0.5);
     this.entity.body.collideWorldBounds = true;
+    this.entity.animations.add('spin', [0, 1, 2, 3], 1, true);
+    this.entity.animations.play('spin');
+    this.entity.animations.currentAnim.setFrame(getRandomInt(0, 4), true);
 
     this.move();
   }
@@ -44,4 +47,8 @@ export default class Bat {
   kill() {
     this.entity.destroy();
   }
+}
+
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
 }
