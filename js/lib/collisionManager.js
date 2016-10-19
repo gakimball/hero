@@ -4,31 +4,25 @@ export default class CollisionManager {
    * @param {object} game - Phaser game instance.
    * @param {object} entities - Object of entities to reference.
    */
-  constructor(game, entities) {
+  constructor(game, entities, map) {
     this.game = game;
     this.entities = entities;
-
-    this.defineCollisions();
+    this.map = map;
+    this.collisions = [];
   }
 
   /**
    * Sets up pairs of entities that should collide.
    */
-  defineCollisions() {
-    let entities = this.entities;
-
-    this.COLLISIONS = [
-      [entities.player.entity, entities.platforms],
-      [entities.player.entity, entities.walls],
-      [entities.player._bomb.entity, entities.platforms]
-    ];
+  collide(a, b) {
+    this.collisions.push([a, b]);
   }
 
   /**
    * Calls Phaer's `game.physics.arcade.collide()` for each set of entities defined in `defineCollisions()`. Runs during Phaser's `update()` step.
    */
   handleCollisions() {
-    for (var pair of this.COLLISIONS) {
+    for (let pair of this.collisions) {
       this.game.physics.arcade.collide.apply(this.game.physics.arcade, pair);
     }
   }
@@ -44,7 +38,7 @@ export default class CollisionManager {
       bat.kill();
     }, null);
 
-    overlap(entities.player._bomb.explosions, entities.walls, (expl, wall) => {
+    overlap(entities.player._bomb.explosions, this.map.entities.walls, (expl, wall) => {
       wall.destroy();
     });
 
