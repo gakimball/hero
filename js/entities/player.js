@@ -17,7 +17,7 @@ export default class Player {
   constructor(game, inventory) {
     this._game = game;
     this.inventory = inventory;
-    this.entity = this._game.add.sprite(300, game.world.height / 2, 'guy');
+    this.entity = this._game.add.sprite(game.world.width / 2, game.world.height / 2, 'guy');
     this._game.physics.arcade.enable(this.entity);
     this.entity.scale.setTo(SCALE, SCALE);
     this.entity.anchor.setTo(0.5, 1);

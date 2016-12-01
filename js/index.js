@@ -3,6 +3,7 @@ import Bat from './entities/bat';
 import Inventory from './lib/inventory';
 import UI from './lib/ui';
 import CollisionManager from './lib/collisionManager';
+import Room from './lib/map';
 
 import loadAssets from './lib/loadAssets';
 
@@ -12,6 +13,7 @@ var ui;
 var entities;
 var inventory;
 var collisions;
+var map;
 
 const BAT_COORDS = [
   { x: 500, y: 300 },
@@ -30,9 +32,9 @@ function create() {
   let platforms = game.add.group();
   platforms.enableBody = true;
 
-  let ground = platforms.create(0, game.world.height - 64, 'platform');
-  ground.scale.setTo(10, 1);
-  ground.body.immovable = true;
+  // let ground = platforms.create(0, game.world.height - 64, 'platform');
+  // ground.scale.setTo(10, 1);
+  // ground.body.immovable = true;
 
   // Inventory
   inventory = new Inventory();
@@ -42,20 +44,24 @@ function create() {
 
   // Bat
   let bats = game.add.group();
-  for (let coords of BAT_COORDS) {
-    new Bat(game, bats, coords);
-  }
+  // for (let coords of BAT_COORDS) {
+    // new Bat(game, bats, coords);
+  // }
 
   // Walls
   let walls = game.add.group();
   walls.enableBody = true;
 
-  let wall = walls.create(100, 300, 'platform');
-  wall.scale.setTo(1, 4);
-  wall.body.immovable = true;
+  // let wall = walls.create(100, 300, 'platform');
+  // wall.scale.setTo(1, 4);
+  // wall.body.immovable = true;
 
   // UI
   ui = new UI(game, player, inventory);
+
+  // Map
+  map = new Room(game);
+  map.build();
 
   entities = {
     player: player,
@@ -65,7 +71,11 @@ function create() {
   }
 
   // Collision manager
-  collisions = new CollisionManager(game, entities);
+  collisions = new CollisionManager(game, entities, map);
+
+  collisions.collide(entities.player.entity, map.entities.platforms);
+  collisions.collide(entities.player.entity, map.entities.walls);
+  collisions.collide(entities.player._bomb.entity, map.entities.platforms);
 }
 
 function update() {
